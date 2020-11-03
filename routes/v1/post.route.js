@@ -5,5 +5,6 @@ const router = express.Router();
 
 router.route('/create').post(post.create);
 router.route('/listAll').get(post.listAll);
+router.route('/listMain').get(post.listAll);
 
 export default router

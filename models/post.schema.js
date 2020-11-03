@@ -13,6 +13,7 @@ const postSchema = new mongoose.Schema({
     path: { type: String, required: true },
     show: { type: Boolean, required: true },
     title: { type: String, required: true },
+    summary: { type: String, required: true },
     contents: { type: String, required: true },
     regexContents: { type: String, required: true },
     comments: [commentSchema]

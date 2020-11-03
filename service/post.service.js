@@ -1,15 +1,17 @@
 import postSchema from '../models/post.schema';
+import {getCurrentDate} from "../utils/time.util";
 
 export default {
     // CREATE
     create: async () => {
 
         const post = new postSchema({
-            created: new Date(),
+            created: getCurrentDate(),
             tag: "Spring",
             path: "spring",
             show: true,
             title: "test",
+            summary: "test test 중입니다.",
             contents: "test contents",
             regexContents: "test regex Contents",
             comments: null

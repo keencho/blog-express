@@ -1,8 +1,8 @@
-import postRepo from '../../repository/post.repository';
+import postService from '../../service/post.service';
 
 const create = async(req, res, next) => {
     try {
-        await postRepo.create();
+        await postService.create();
 
         return res.json({
             success: true,
@@ -16,12 +16,12 @@ const create = async(req, res, next) => {
 
 const listAll = async(req, res, next) => {
     try {
-        const list = await postRepo.listAll();
+        const list = await postService.listAll();
 
         return res.json({
             success: true,
             data: list
-        })
+        });
     } catch (e) {
         next(e);
     }

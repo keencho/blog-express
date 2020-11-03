@@ -1,4 +1,4 @@
-import postService from '../../service/post.service';
+import postService from '../../services/post.service';
 
 const create = async(req, res, next) => {
     try {
@@ -14,7 +14,7 @@ const create = async(req, res, next) => {
 
 };
 
-const listAll = async(req, res, next) => {
+const listAll = async (req, res, next) => {
     try {
         const list = await postService.listAll();
 

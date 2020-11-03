@@ -21,9 +21,7 @@ export default {
     },
 
     // LIST ALL
-    listAll: async () => {
-
-        // const postModel = mongoose.model('post', postSchema);
-        return await postSchema.find();
+    listAll: () => {
+        return postSchema.find();
     }
 }

@@ -1,9 +1,9 @@
-import mainService from "../../service/main.service";
+import mainService from "../../services/main.service";
 
-const listMain = (req, res, next) => {
+const listMain = async(req, res, next) => {
     try {
         console.time("dbsave");
-        const list = mainService.listMain()
+        const list = await mainService.listMain()
         console.timeEnd("dbsave");
 
         return res.json({

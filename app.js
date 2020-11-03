@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser'
 import logger from 'morgan'
 import mongoose from 'mongoose';
 
-import v1Route from './routes/v1'
+import v1Route from './app/routes/v1'
 
 const app = express();
 

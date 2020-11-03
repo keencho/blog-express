@@ -4,9 +4,9 @@ export default {
     /*
     * LIST MAIN
     * 메인페이지에 들어갈 데이터들 집합*/
-    listMain: () => {
+    listMain: async () => {
 
-        const tag = postSchema.aggregate()
+        const tag = await postSchema.aggregate()
             .group({
                 _id: '$tag',
                 count: { $sum: 1}
@@ -15,7 +15,7 @@ export default {
                 _id: 1
             })
 
-        const archive = postSchema.aggregate()
+        const archive = await postSchema.aggregate()
             .group({
                 _id: {
                     $substr: ['$created', 0, 7]

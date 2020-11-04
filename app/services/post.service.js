@@ -21,6 +21,19 @@ export default {
         await post.save();
     },
 
+    // LIST BY QUERY
+    list: async () => {
+        const result = await postSchema.aggregate()
+            .facet({
+                paging: [
+                    { $count: 'count' }
+                ],
+                rows: [{ $skip: 0 }, { $limit : 1 }]
+            })
+
+        return result;
+    },
+
     // LIST ALL
     listAll: () => {
         return postSchema.find();

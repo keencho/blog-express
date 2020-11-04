@@ -24,7 +24,7 @@ const create = async(req, res, next) => {
 const list = async(req, res, next) => {
     try {
 
-        const list = await postService.listAll();
+        const list = await postService.list();
 
         return res.json({
             success: true,

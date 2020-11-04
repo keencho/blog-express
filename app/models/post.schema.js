@@ -10,7 +10,8 @@ const commentSchema = new mongoose.Schema({
 const postSchema = new mongoose.Schema(
     {
         created: { type: Date, required: true },
-        tag: { type: String, required: true},
+        tag: [{ type: String, required: true}],
+        thumbnail: { type: String, required: false},
         path: { type: String, required: true },
         show: { type: Boolean, required: true },
         title: { type: String, required: true },

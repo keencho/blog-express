@@ -7,7 +7,8 @@ export default {
 
         const post = new postSchema({
             created: getCurrentDate(),
-            tag: "Spring",
+            tag: "Annotation",
+            thumbnail: "https://pfh.goodsflow.com/resources/image/2020-10-30/5755f651-79cb-4746-9f56-c564325665da.jpg",
             path: "spring",
             show: true,
             title: "test",

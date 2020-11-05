@@ -1,5 +1,4 @@
-export const getCurrentDate = () => {
-    const date = new Date();
+export const getUTCDate = (date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
     const today = date.getDate();

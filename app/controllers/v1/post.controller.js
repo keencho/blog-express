@@ -1,13 +1,11 @@
 import postService from '../../services/post.service';
+import JsonResult from '../../utils/json.util';
 
 const create = async(req, res, next) => {
     try {
         await postService.create();
 
-        return res.json({
-            success: true,
-            data: null
-        });
+        return JsonResult.success(res, null);
     } catch (e) {
         next(e);
     }
@@ -24,12 +22,9 @@ const create = async(req, res, next) => {
 const list = async(req, res, next) => {
     try {
 
-        const list = await postService.list();
+        const list = await postService.list(req.query);
 
-        return res.json({
-            success: true,
-            data: list
-        });
+        return JsonResult.success(res, list);
     } catch (e) {
         next(e);
     }
@@ -39,10 +34,7 @@ const listAll = async (req, res, next) => {
     try {
         const list = await postService.listAll();
 
-        return res.json({
-            success: true,
-            data: list
-        });
+        return JsonResult.success(res, list);
     } catch (e) {
         next(e);
     }

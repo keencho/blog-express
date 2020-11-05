@@ -1,13 +1,13 @@
 import postSchema from '../models/post.schema';
-import {getUTCDate} from "../utils/time.util";
-import {isEmpty} from "../utils/string.util";
+import TimeUtils from "../utils/time.utils";
+import StringUtils from "../utils/string.utils";
 
 export default {
     // CREATE
     create: async () => {
 
         const post = new postSchema({
-            created: getUTCDate(new Date()),
+            created: TimeUtils.getUTCDate(new Date()),
             tag: ["Swift", "iOS"],
             thumbnail: null,
             path: "spring",
@@ -31,7 +31,7 @@ export default {
         const startDate = new Date(data.date);
         const endDate = getUTCDate(new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0, 23, 59, 59, 59));
 
-        const tagMatch = isEmpty(tag) ? { tag : { $ne: null } } : { tag : tag } ;
+        const tagMatch = StringUtils.isEmpty(tag) ? { tag : { $ne: null } } : { tag : tag } ;
         const dateMatch = isNaN(startDate.getTime()) ? { created: { $ne : null} } : { created: { $gte: startDate, $lte: endDate }};
 
         const result = await postSchema.aggregate()

@@ -1,5 +1,5 @@
 import postService from '../../services/post.service';
-import JsonResult from '../../utils/json.util';
+import JsonResult from '../../utils/json.utils';
 
 const create = async(req, res, next) => {
     try {

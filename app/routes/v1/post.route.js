@@ -1,7 +1,7 @@
 import express from 'express'
 import * as post from '../../controllers/v1/post.controller'
 import {check, validationResult} from 'express-validator';
-import JsonResult from '../../utils/json.util';
+import JsonResult from '../../utils/json.utils';
 
 const router = express.Router();
 

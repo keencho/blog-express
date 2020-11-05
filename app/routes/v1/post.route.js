@@ -17,12 +17,6 @@ router.route('/list').get(
         .withMessage('limit 파라미터가 없습니다.')
         .isNumeric()
         .withMessage('limit 파라미터는 숫자형 이어야 합니다.'),
-    check('tag')
-        .exists()
-        .withMessage('tag 파라미터가 없습니다 (required=true, nullable)'),
-    check('date')
-        .exists()
-        .withMessage('date 파라미터가 없습니다 (required=true, nullable'),
     (req, res, next) => {
         const errors = validationResult(req);
 

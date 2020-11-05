@@ -1,5 +1,6 @@
 import postSchema from '../models/post.schema';
 import {getUTCDate} from "../utils/time.util";
+import {isEmpty} from "../utils/string.util";
 
 export default {
     // CREATE
@@ -7,8 +8,8 @@ export default {
 
         const post = new postSchema({
             created: getUTCDate(new Date()),
-            tag: "Annotation",
-            thumbnail: "https://pfh.goodsflow.com/resources/image/2020-10-30/5755f651-79cb-4746-9f56-c564325665da.jpg",
+            tag: ["Swift", "iOS"],
+            thumbnail: null,
             path: "spring",
             show: true,
             title: "test",
@@ -30,10 +31,8 @@ export default {
         const startDate = new Date(data.date);
         const endDate = getUTCDate(new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0, 23, 59, 59, 59));
 
-        const tagMatch = tag.length > 0 ? { tag : tag } : { tag : { $ne: null } };
+        const tagMatch = isEmpty(tag) ? { tag : { $ne: null } } : { tag : tag } ;
         const dateMatch = isNaN(startDate.getTime()) ? { created: { $ne : null} } : { created: { $gte: startDate, $lte: endDate }};
-
-        console.log(dateMatch);
 
         const result = await postSchema.aggregate()
             .match(dateMatch)

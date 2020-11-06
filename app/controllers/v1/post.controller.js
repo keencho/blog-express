@@ -14,7 +14,7 @@ const create = async(req, res, next) => {
 /**
  * 검색 조건에 따른 list 조회
  *
- * @param req - tag, date(yyyy-MM format) choose one or null whatever it can be...
+ * @param req - start, limit, tag(nullable), date(yyyy-MM, nullable)
  * @param res
  * @param next
  * @returns {Promise<*>}

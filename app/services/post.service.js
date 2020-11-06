@@ -29,12 +29,12 @@ export default {
         const limit = Number(data.limit);
         const tag = data.tag;
         const startDate = new Date(data.date);
-        const endDate = getUTCDate(new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0, 23, 59, 59, 59));
+        const endDate = TimeUtils.getUTCDate(new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0, 23, 59, 59, 59));
 
         const tagMatch = StringUtils.isEmpty(tag) ? { tag : { $ne: null } } : { tag : tag } ;
         const dateMatch = isNaN(startDate.getTime()) ? { created: { $ne : null} } : { created: { $gte: startDate, $lte: endDate }};
 
-        const result = await postSchema.aggregate()
+        return await postSchema.aggregate()
             .match(dateMatch)
             .match(tagMatch)
             .facet({
@@ -48,8 +48,6 @@ export default {
                 ],
                 rows: [{ $skip: start }, { $limit : limit }]
             })
-
-        return result;
     },
 
     // LIST ALL

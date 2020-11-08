@@ -8,11 +8,11 @@ export default {
 
         const post = new postSchema({
             created: TimeUtils.getUTCDate(new Date()),
-            tag: ["Swift", "iOS"],
+            tag: ["DB"],
             thumbnail: null,
             path: "spring",
             show: true,
-            title: "test",
+            title: "오늘의23",
             summary: "test test 중입니다.",
             contents: "test contents",
             regexContents: "test regex Contents",
@@ -46,7 +46,8 @@ export default {
                         }
                     }
                 ],
-                rows: [{ $skip: start }, { $limit : limit }]
+                // 정렬은 무조건 최신순
+                rows: [{$sort: {"created": -1}}, { $skip: start }, { $limit : limit }]
             })
     },
 

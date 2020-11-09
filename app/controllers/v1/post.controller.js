@@ -30,6 +30,16 @@ const list = async(req, res, next) => {
     }
 }
 
+const listInfiniteScroll = async(req, res, next) => {
+    try {
+        const list = await postService.listInfiniteScroll(req.query);
+
+        return JsonResult.success(res, list);
+    } catch (e) {
+        next(e);
+    }
+}
+
 const listAll = async (req, res, next) => {
     try {
         const list = await postService.listAll();
@@ -43,5 +53,6 @@ const listAll = async (req, res, next) => {
 export {
     create,
     list,
+    listInfiniteScroll,
     listAll
 }

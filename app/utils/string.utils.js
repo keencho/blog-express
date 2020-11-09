@@ -1,8 +1,8 @@
 export default {
-    isEmpty: (str) => {
-        if(typeof str == "undefined" || str == null || str == "")
-            return true;
-        else
+    hasText: (str) => {
+        if(typeof str == "undefined" || str == null || str == "" || str == "null")
             return false;
+        else
+            return true;
     }
 }

@@ -1,5 +1,6 @@
 import postSchema from '../models/post.schema';
 import TimeUtils from "../utils/time.utils";
+import JsonUtils from "../utils/json.utils";
 import StringUtils from "../utils/string.utils";
 
 export default {
@@ -72,25 +73,30 @@ export default {
         const startDate = new Date(data.date);
         const endDate = TimeUtils.getUTCDate(new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0, 23, 59, 59, 59));
 
-        const tagMatch = StringUtils.hasText(tag) ? { tag : tag } : { tag : { $ne: null } } ;
-        const dateMatch = isNaN(startDate.getTime()) ? { created: { $ne : null} } : { created: { $gte: startDate, $lte: endDate }};
-
-        const result = await postSchema.aggregate()
-            .match(tagMatch)
-            .match(dateMatch)
-            .sort("-created")
-            .skip(start)
-            .limit(limit);
+        const tagMatch = StringUtils.hasText(tag) ? {tag: tag} : {tag: {$ne: null}};
+        const dateMatch = isNaN(startDate.getTime()) ? {created: {$ne: null}} : {
+            created: {
+                $gte: startDate,
+                $lte: endDate
+            }
+        };
+        const showMatch = {show: true};
 
         const count = await postSchema
             .countDocuments(tagMatch)
             .countDocuments(dateMatch)
+            .countDocuments(showMatch)
             .exec();
 
-        return {
-            count: count,
-            rows: result
-        }
+        const result = await postSchema.aggregate()
+            .match(tagMatch)
+            .match(dateMatch)
+            .match(showMatch)
+            .sort("-created")
+            .skip(start)
+            .limit(limit);
+
+        return JsonUtils.pagingData(count, result)
     },
 
     // LIST ALL

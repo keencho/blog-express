@@ -12,5 +12,11 @@ export default {
             data: null,
             error: error
         })
+    },
+    pagingData: (count, rows) => {
+        return {
+            count: count,
+            rows: rows
+        }
     }
 }

@@ -1,30 +1,25 @@
 import authService from '../../services/auth.service';
-import jwt from 'jsonwebtoken';
 import secretObj from '../../config/jwt';
 
 const login = async(req, res, next) => {
     try {
 
-        let token = jwt.sign(
-{ id: "seyoung1231" },
-        secretObj.secret,
-{ expiresIn: '60m' }
-        );
-
-        const jwt = await authService.issueJWTToken({
-            id: 'seyoung1231'
+        const user = await authService.findUser({
+            id: req.query.adminId
         });
 
-        if (jwt.length > 0 && jwt[0].pw === "sw971312!@") {
-            throw new Error("ㅋㅋ");
+        if (user.length) {
+            if (user[0].pw !== req.query.adminPw) throw new Error("아이디 / 비밀번호가 일치하지 않습니다.");
+
+            res.cookie(secretObj.cookieName, authService.issueToken(user));
+
+            return res.json({
+                success: true,
+                data: null
+            });
         } else {
-            throw new Error("사용자 인증에 실패하였습니다.");
+            throw new Error("아이디 / 비밀번호가 일치하지 않습니다.");
         }
-
-        return res.json({
-            success: true,
-            data: jwt
-        });
     } catch (e) {
         next(e);
     }

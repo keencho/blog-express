@@ -16,5 +16,9 @@ export default {
         }, secretObj.secret, {
             expiresIn: '1h'
         });
+    },
+
+    authenticationToken: (token) => {
+        jwt.verify(token, secretObj.secret);
     }
 }

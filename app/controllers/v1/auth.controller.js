@@ -1,5 +1,5 @@
 import authService from '../../services/auth.service';
-import secretObj from '../../config/jwt';
+import jwtObj from "../../config/jwt";
 
 const login = async(req, res, next) => {
     try {
@@ -11,11 +11,9 @@ const login = async(req, res, next) => {
         if (user.length) {
             if (user[0].pw !== req.query.adminPw) throw new Error("아이디 / 비밀번호가 일치하지 않습니다.");
 
-            res.cookie(secretObj.cookieName, authService.issueToken(user));
-
             return res.json({
                 success: true,
-                data: null
+                data: authService.issueToken(user)
             });
         } else {
             throw new Error("아이디 / 비밀번호가 일치하지 않습니다.");
@@ -25,6 +23,21 @@ const login = async(req, res, next) => {
     }
 }
 
+const authentication = async(req, res, next) => {
+    try {
+
+        authService.authenticationToken(req.headers[jwtObj.sessionName]);
+
+        return res.json({
+            success: true,
+            data: null
+        });
+    } catch (e) {
+        next(e);
+    }
+}
+
 export {
-    login
+    login,
+    authentication
 }

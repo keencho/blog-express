@@ -5,7 +5,7 @@ import JsonResult from '../../utils/json.utils';
 
 const router = express.Router();
 
-router.route('/create').post(post.create);
+router.route('/write').post(post.create);
 router.route('/list').get(
     check('start')
         .exists()

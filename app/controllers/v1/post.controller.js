@@ -26,7 +26,11 @@ const get = async(req, res, next) => {
     try {
         const post = await postService.get(req.query.path);
 
-        return JsonResult.success(res, post)
+        if (post === null) {
+            return JsonResult.fail(res, "존재하지 않는 글입니다.");
+        } else {
+            return JsonResult.success(res, post);
+        }
     } catch (e) {
         next(e);
     }

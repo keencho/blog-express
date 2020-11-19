@@ -51,14 +51,21 @@ export default {
     // GET
     get: async(path) => {
         const post = await postSchema.findOne()
-            .where('post').equals(path);
-        console.log(post);
+            .where('path').equals(path);
 
         return post;
     },
 
     // CREATE
     create: async(params) => {
+
+        const existPost = await postSchema.findOne()
+            .where('path').equals(params.path);
+
+        if (existPost !== null) {
+            throw new Error("이미 존재하는 경로입니다. 다른 경로를 입력해주세요.");
+        }
+
         if (!Array.isArray(params.tags)) {
             params.tags = params.tags.split(" ");
         }

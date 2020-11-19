@@ -4,25 +4,82 @@ import JsonUtils from "../utils/json.utils";
 import StringUtils from "../utils/string.utils";
 
 export default {
-    // CREATE
-    create: async () => {
+    // VALIDATE
+    validate: async (post) => {
 
-        for (let i = 0; i <= 50; i++) {
-            const post = new postSchema({
-                created: TimeUtils.getUTCDate(new Date()),
-                tag: ["DB"],
-                thumbnail: i % 2 === 0 ? "https://pfh.goodsflow.com/resources/image/2020-10-30/5755f651-79cb-4746-9f56-c564325665da.jpg" : null,
-                path: "spring",
-                show: true,
-                title: "2020-11-10: " + i + "번째",
-                summary: "test test 중입니다.",
-                contents: "test contents",
-                regexContents: "test regex Contents",
-                comments: null
-            });
+        let success = true;
+        let error;
+        let isCreate = true;
 
-            await post.save();
+        switch (true) {
+            case !StringUtils.hasText(post.title):
+                error = "제목";
+                break;
+            case post.tags.length < 1:
+                error = "태그";
+                break;
+            case !StringUtils.hasText(post.path):
+                error = "접근 경로";
+                break;
+            case !StringUtils.hasText(post.summary):
+                error = "요약";
+                break;
+            case !StringUtils.hasText(post.contents):
+                error = "컨텐츠";
+                break;
         }
+
+        // 수정의 경우..
+        if (StringUtils.hasText(post._id)) {
+            isCreate = false;
+        }
+
+        if (StringUtils.hasText(error)) {
+            success = false;
+            error += "을(를) 입력하세요.";
+        }
+
+        const validate = {
+            success: success,
+            isCreate: isCreate,
+            error: error
+        }
+
+        return validate;
+    },
+
+    // GET
+    get: async(path) => {
+        const post = await postSchema.findOne()
+            .where('post').equals(path);
+        console.log(post);
+
+        return post;
+    },
+
+    // CREATE
+    create: async(params) => {
+        if (!Array.isArray(params.tags)) {
+            params.tags = params.tags.split(" ");
+        }
+
+        const post = new postSchema({
+            created: TimeUtils.getUTCDate(new Date()),
+            tags: params.tags,
+            thumbnail: StringUtils.hasText(params.thumbnail) ? params.thumbnail : null,
+            path: params.path.replace(/\s/g, '-'),
+            show: params.show,
+            title: params.title,
+            summary: params.summary,
+            contents: params.contents
+        });
+
+        await post.save();
+    },
+
+    // UPDATE
+    update: async(params) => {
+
     },
 
     // LIST BY QUERY
@@ -30,12 +87,12 @@ export default {
 
         const start = Number(data.start);
         const limit = Number(data.limit);
-        const tag = data.tag;
+        const tags = data.tags;
         const startDate = new Date(data.date);
         const endDate = TimeUtils.getUTCDate(new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0, 23, 59, 59, 59));
 
-        const tagMatch = !StringUtils.hasText(tag) ? { tag : { $ne: null } } : { tag : tag } ;
-        const dateMatch = isNaN(startDate.getTime()) ? { created: { $ne : null} } : { created: { $gte: startDate, $lte: endDate }};
+        const tagMatch = !StringUtils.hasText(tags) ? { tags : { $ne: null } } : { tags : tags } ;
+        const dateMatch = isNaN(startDate.getTime()) ? { created: { $ne : null } } : { created: { $gte: startDate, $lte: endDate }};
 
         const list = await postSchema.aggregate()
             .match(dateMatch)
@@ -73,7 +130,7 @@ export default {
         const startDate = new Date(data.date);
         const endDate = TimeUtils.getUTCDate(new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0, 23, 59, 59, 59));
 
-        const tagMatch = StringUtils.hasText(tag) ? {tag: tag} : {tag: {$ne: null}};
+        const tagMatch = StringUtils.hasText(tag) ? {tags: tag} : {tags: {$ne: null}};
         const dateMatch = isNaN(startDate.getTime()) ? {created: {$ne: null}} : {
             created: {
                 $gte: startDate,

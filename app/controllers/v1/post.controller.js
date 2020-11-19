@@ -1,15 +1,36 @@
 import postService from '../../services/post.service';
 import JsonResult from '../../utils/json.utils';
 
-const create = async(req, res, next) => {
+const write = async(req, res, next) => {
     try {
-        await postService.create();
+
+        const validatePost = await postService.validate(req.query);
+
+        if (validatePost.success) {
+            if (validatePost.isCreate) {
+                await postService.create(req.query);
+            } else {
+                await postService.update(req.query);
+            }
+        } else {
+            return JsonResult.fail(res, validatePost.error);
+        }
 
         return JsonResult.success(res, null);
     } catch (e) {
         next(e);
     }
 };
+
+const get = async(req, res, next) => {
+    try {
+        const post = await postService.get(req.query.path);
+
+        return JsonResult.success(res, post)
+    } catch (e) {
+        next(e);
+    }
+}
 
 /**
  * 검색 조건에 따른 list 조회
@@ -51,7 +72,8 @@ const listAll = async (req, res, next) => {
 }
 
 export {
-    create,
+    write,
+    get,
     list,
     listInfiniteScroll,
     listAll

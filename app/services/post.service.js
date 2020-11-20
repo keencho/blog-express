@@ -133,11 +133,11 @@ export default {
     listInfiniteScroll: async (data) => {
         const start = Number(data.start);
         const limit = Number(data.limit);
-        const tag = data.tag;
+        const tags = data.tags;
         const startDate = new Date(data.date);
         const endDate = TimeUtils.getUTCDate(new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0, 23, 59, 59, 59));
 
-        const tagMatch = StringUtils.hasText(tag) ? {tags: tag} : {tags: {$ne: null}};
+        const tagMatch = StringUtils.hasText(tags) ? {tags: tags} : {tags: {$ne: null}};
         const dateMatch = isNaN(startDate.getTime()) ? {created: {$ne: null}} : {
             created: {
                 $gte: startDate,

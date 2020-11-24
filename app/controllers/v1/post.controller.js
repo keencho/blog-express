@@ -1,13 +1,17 @@
 import postService from '../../services/post.service';
 import JsonResult from '../../utils/json.utils';
+import authService from "../../services/auth.service";
+import jwtObj from "../../config/jwt";
 
 const write = async(req, res, next) => {
     try {
 
+        authService.authenticationToken(req.headers[jwtObj.sessionName]);
+
         const validatePost = await postService.validate(req.query);
 
         if (validatePost.success) {
-            if (validatePost.isCreate) {
+            if (req.query.isCreate === 'true') {
                 await postService.create(req.query);
             } else {
                 await postService.update(req.query);
@@ -15,6 +19,19 @@ const write = async(req, res, next) => {
         } else {
             return JsonResult.fail(res, validatePost.error);
         }
+
+        return JsonResult.success(res, null);
+    } catch (e) {
+        next(e);
+    }
+};
+
+const del = async(req, res, next) => {
+    try {
+
+        authService.authenticationToken(req.headers[jwtObj.sessionName]);
+
+        await postService.delete(req.query);
 
         return JsonResult.success(res, null);
     } catch (e) {
@@ -77,6 +94,7 @@ const listAll = async (req, res, next) => {
 
 export {
     write,
+    del,
     get,
     list,
     listInfiniteScroll,

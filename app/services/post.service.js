@@ -9,7 +9,6 @@ export default {
 
         let success = true;
         let error;
-        let isCreate = true;
 
         switch (true) {
             case !StringUtils.hasText(post.title):
@@ -29,11 +28,6 @@ export default {
                 break;
         }
 
-        // 수정의 경우..
-        if (StringUtils.hasText(post._id)) {
-            isCreate = false;
-        }
-
         if (StringUtils.hasText(error)) {
             success = false;
             error += "을(를) 입력하세요.";
@@ -41,7 +35,6 @@ export default {
 
         const validate = {
             success: success,
-            isCreate: isCreate,
             error: error
         }
 
@@ -75,7 +68,7 @@ export default {
             tags: params.tags,
             thumbnail: StringUtils.hasText(params.thumbnail) ? params.thumbnail : null,
             path: params.path.replace(/\s/g, '-'),
-            show: params.show,
+            show: params.show === 'true',
             title: params.title,
             summary: params.summary,
             contents: params.contents
@@ -86,7 +79,24 @@ export default {
 
     // UPDATE
     update: async(params) => {
+        await postSchema.updateOne(
+            { _id: params._id },
+            {
+                tags: params.tags,
+                thumbnail: StringUtils.hasText(params.thumbnail) ? params.thumbnail : null,
+                path: params.path.replace(/\s/g, '-'),
+                show: params.show === 'true',
+                title: params.title,
+                summary: params.summary,
+                contents: params.contents
+            }
+        )
+    },
 
+    delete: async(params) => {
+      await postSchema.deleteOne(
+          { _id: params._id }
+      )
     },
 
     // LIST BY QUERY

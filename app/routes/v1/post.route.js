@@ -30,6 +30,15 @@ router.route('/write').post(
     },
     post.write
 );
+router.route('/delete').post(
+    check('_id')
+        .exists()
+        .withMessage('id 파라미터가 없습니다.'),
+    (req, res, next) => {
+        chkError(req, res, next);
+    },
+    post.del
+);
 router.route('/get').get(
     check('path')
         .exists()

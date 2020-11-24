@@ -2,16 +2,18 @@ import postService from '../../services/post.service';
 import JsonResult from '../../utils/json.utils';
 import authService from "../../services/auth.service";
 import jwtObj from "../../config/jwt";
+import StringUtils from "../../utils/string.utils";
+import BooleanUtils from "../../utils/boolean.utils";
 
 const write = async(req, res, next) => {
     try {
 
-        authService.authenticationToken(req.headers[jwtObj.sessionName]);
+        authService.authenticationToken();
 
         const validatePost = await postService.validate(req.query);
 
         if (validatePost.success) {
-            if (req.query.isCreate === 'true') {
+            if (BooleanUtils.isTrue(req.query.isCreate)) {
                 await postService.create(req.query);
             } else {
                 await postService.update(req.query);
@@ -74,7 +76,16 @@ const list = async(req, res, next) => {
 
 const listInfiniteScroll = async(req, res, next) => {
     try {
-        const list = await postService.listInfiniteScroll(req.query);
+
+        let isAdmin = false;
+        if (StringUtils.hasText(req.headers[jwtObj.sessionName])) {
+            try {
+                await authService.authenticationToken(req.headers[jwtObj.sessionName]);
+                isAdmin = true;
+            } catch (e) {}
+        }
+
+        const list = await postService.listInfiniteScroll(req.query, isAdmin);
 
         return JsonResult.success(res, list);
     } catch (e) {

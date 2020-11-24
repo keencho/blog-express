@@ -2,6 +2,7 @@ import postSchema from '../models/post.schema';
 import TimeUtils from "../utils/time.utils";
 import JsonUtils from "../utils/json.utils";
 import StringUtils from "../utils/string.utils";
+import BooleanUtils from "../utils/boolean.utils";
 
 export default {
     // VALIDATE
@@ -68,7 +69,7 @@ export default {
             tags: params.tags,
             thumbnail: StringUtils.hasText(params.thumbnail) ? params.thumbnail : null,
             path: params.path.replace(/\s/g, '-'),
-            show: params.show === 'true',
+            show: BooleanUtils.isTrue(params.show),
             title: params.title,
             summary: params.summary,
             contents: params.contents
@@ -85,7 +86,7 @@ export default {
                 tags: params.tags,
                 thumbnail: StringUtils.hasText(params.thumbnail) ? params.thumbnail : null,
                 path: params.path.replace(/\s/g, '-'),
-                show: params.show === 'true',
+                show: BooleanUtils.isTrue(params.show),
                 title: params.title,
                 summary: params.summary,
                 contents: params.contents
@@ -140,7 +141,7 @@ export default {
     },
 
     // LIST FOR INFINITE SCROLL
-    listInfiniteScroll: async (data) => {
+    listInfiniteScroll: async (data, isAdmin) => {
         const start = Number(data.start);
         const limit = Number(data.limit);
         const tags = data.tags;
@@ -148,24 +149,24 @@ export default {
         const endDate = TimeUtils.getUTCDate(new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0, 23, 59, 59, 59));
 
         const tagMatch = StringUtils.hasText(tags) ? {tags: tags} : {tags: {$ne: null}};
+        const adminMatch = BooleanUtils.isTrue(isAdmin) ? {show: {$ne: null}} : {show: true};
         const dateMatch = isNaN(startDate.getTime()) ? {created: {$ne: null}} : {
             created: {
                 $gte: startDate,
                 $lte: endDate
             }
         };
-        const showMatch = {show: true};
 
         const count = await postSchema
             .countDocuments(tagMatch)
+            .countDocuments(adminMatch)
             .countDocuments(dateMatch)
-            .countDocuments(showMatch)
             .exec();
 
         const result = await postSchema.aggregate()
             .match(tagMatch)
+            .match(adminMatch)
             .match(dateMatch)
-            .match(showMatch)
             .sort("-created")
             .skip(start)
             .limit(limit);

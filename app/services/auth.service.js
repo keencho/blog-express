@@ -19,6 +19,6 @@ export default {
     },
 
     authenticationToken: (token) => {
-        jwt.verify(token, secretObj.secret);
+        return jwt.verify(token, secretObj.secret);
     }
 }

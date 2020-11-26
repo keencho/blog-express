@@ -8,7 +8,7 @@ import BooleanUtils from "../../utils/boolean.utils";
 const write = async(req, res, next) => {
     try {
 
-        authService.authenticationToken();
+        authService.authenticationToken(req.headers[jwtObj.sessionName]);
 
         const validatePost = await postService.validate(req.query);
 

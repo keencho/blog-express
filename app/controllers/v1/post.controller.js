@@ -93,9 +93,9 @@ const listInfiniteScroll = async(req, res, next) => {
     }
 }
 
-const listAll = async (req, res, next) => {
+const listArchives = async (req, res, next) => {
     try {
-        const list = await postService.listAll();
+        const list = await postService.listArchives();
 
         return JsonResult.success(res, list);
     } catch (e) {
@@ -109,5 +109,5 @@ export {
     get,
     list,
     listInfiniteScroll,
-    listAll
+    listArchives
 }

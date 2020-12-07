@@ -128,7 +128,6 @@ export default {
                 rows: [{$sort: {"created": -1}}, { $skip: start }, { $limit : limit }]
             })
 
-        // TODO: what to do when facet paging result is zero. I calculate after querying, but I think it is bad idea
         if(list[0].paging.length === 0) {
             list[0].paging = {
                 start: start,
@@ -174,8 +173,12 @@ export default {
         return JsonUtils.pagingData(count, result)
     },
 
-    // LIST ALL
-    listAll: () => {
-        return postSchema.find();
+    // LIST Archives
+    listArchives: async() => {
+        const list = postSchema.find();
+
+        list.forEach()
+
+        return list;
     }
 }

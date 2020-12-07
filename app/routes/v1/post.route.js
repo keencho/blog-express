@@ -79,7 +79,7 @@ router.route('/listInfiniteScroll').get(
         chkError(req, res, next);
     },
     post.listInfiniteScroll);
-router.route('/listAll').get(post.listAll);
+router.route('/listArchives').get(post.listArchives);
 
 const chkError = (req, res, next) => {
     const errors = validationResult(req);

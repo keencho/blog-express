@@ -175,10 +175,26 @@ export default {
 
     // LIST Archives
     listArchives: async() => {
-        const list = postSchema.find();
 
-        list.forEach()
+        const result = await postSchema.aggregate()
+            .group({
+                _id: {
+                    $substr: ['$created', 0, 4]
+                }
+            })
+            .sort('-_id')
 
-        return list;
+        const list = await postSchema.find();
+
+        result.forEach(d => {
+            d.article = [];
+            list.forEach(l => {
+                if(d._id.toString() === l.created.getFullYear().toString()) {
+                    d.article.push(l);
+                }
+            })
+        })
+
+        return result;
     }
 }

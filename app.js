@@ -45,5 +45,5 @@ app.use((err, req, res, next) => {
         .json({success: false, message: apiError.message})
 });
 
-// bin/www 를 그대로 사용하기 위해서 예외적으로 commonJs 문법을 적용
+// bin/www.js 를 그대로 사용하기 위해서 예외적으로 commonJs 문법을 적용
 module.exports = app;

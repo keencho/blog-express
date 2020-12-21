@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www --exec babel-node --presets @babel/preset-env",
+    "start": "nodemon bin/www.js --exec babel-node --presets @babel/preset-env",
     "test": "jest"
   },
   "dependencies": {
@@ -27,6 +27,5 @@
     "babel-jest": "^26.6.2",
     "regenerator-runtime": "^0.13.7",
     "nodemon": "^2.0.6"
-  },
-  "type": "module"
+  }
 }
